@@ -69,7 +69,9 @@ namespace LogTrailer {
                 }
                 Invoke((MethodInvoker)delegate {
                     if (lines.Count > 0) {
+                        listBoxLog.BeginUpdate();
                         listBoxLog.Items.AddRange(lines.ToArray<object>());
+                        listBoxLog.EndUpdate();
                     }
                     if (cbAlwaysShowLast.Checked) {
                         int count = listBoxLog.Items.Count;
