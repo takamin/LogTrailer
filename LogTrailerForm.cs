@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Drawing;
 using System.Linq;
@@ -8,14 +9,70 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using LibTakamin;
+using LibTakamin.Configuration;
 
 namespace LogTrailer {
     public partial class LogTrailerForm : Form {
+        /// <summary>
+        /// 
+        /// </summary>
+        static private AppSettingsWrapper conf = new AppSettingsWrapper(ConfigurationManager.AppSettings);
+        private RegexStyle[] lineStyleList = null;
         public LogTrailerForm() {
             InitializeComponent();
             timer.Interval = 10;
             timer.Enabled = false;
             this.Load += new EventHandler(LogTrailerForm_Load);
+            lineStyleList = RegexStyle.Parse(conf.GetValueAsString("pattern", ""));
+            if (lineStyleList.Length > 0) {
+                listBoxLog.DrawMode = DrawMode.OwnerDrawFixed;
+                listBoxLog.DrawItem += new DrawItemEventHandler(listBoxLog_DrawItem);
+            }
+        }
+        /// <summary>
+        /// draws item by using color that defined in application settings with regular expression.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void listBoxLog_DrawItem(object sender, DrawItemEventArgs e) {
+            if (e.Index < 0) {
+                e.DrawBackground();
+                return;
+            }
+
+            // tests the string by regular expression pattern to determine the drawing style. 
+            string s = listBoxLog.Items[e.Index] as string;
+            Color color = Color.Black;
+            Color backgroundColor = Color.White;
+            bool bold = false;
+            foreach (RegexStyle style in lineStyleList) {
+                if (style.IsMatch(s)) {
+                    color = style.Color;
+                    backgroundColor = style.BackgroundColor;
+                    bold = style.IsBold;
+                }
+            }
+
+            // if the item is selected, it is drawn by system colors.
+            if ((e.State & DrawItemState.Selected) == DrawItemState.Selected) {
+                color = SystemColors.HighlightText;
+                backgroundColor = SystemColors.Highlight;
+            }
+
+            // draws string by style above.
+            Brush backgroundBrush = new SolidBrush(backgroundColor);
+            Font font = e.Font;
+            if (bold) {
+                font = new Font(font, FontStyle.Bold);
+            }
+            Brush textBrush = new SolidBrush(color);
+            e.Graphics.FillRectangle(backgroundBrush, e.Bounds);
+            e.Graphics.DrawString(s, font, textBrush, e.Bounds.Location);
+            
+            // draws focus rect, if it is focused.
+            if ((e.State & DrawItemState.Focus) == DrawItemState.Focus) {
+                e.DrawFocusRectangle();
+            }
         }
 
         void LogTrailerForm_Load(object sender, EventArgs e) {
@@ -75,16 +132,24 @@ namespace LogTrailer {
                     }
                     if (cbAlwaysShowLast.Checked) {
                         int count = listBoxLog.Items.Count;
-                        if (count > 0 && listBoxLog.SelectedIndex != count - 1) {
-                            int shownItemsCount = listBoxLog.ClientRectangle.Height / listBoxLog.ItemHeight;
-                            int topIndex = count - shownItemsCount;
-                            if (topIndex < 0) {
-                                topIndex = 0;
-                            }
-                            if (listBoxLog.TopIndex != topIndex) {
-                                listBoxLog.TopIndex = topIndex;
-                            }
+                        int shownItemsCount = listBoxLog.ClientRectangle.Height / listBoxLog.ItemHeight;
+                        int topIndex = count - shownItemsCount;
+                        if (topIndex < 0) {
+                            topIndex = 0;
                         }
+                        if (listBoxLog.TopIndex != topIndex) {
+                            listBoxLog.TopIndex = topIndex;
+                        }
+                        //if (count > 0 && listBoxLog.SelectedIndex != count - 1) {
+                        //    int shownItemsCount = listBoxLog.ClientRectangle.Height / listBoxLog.ItemHeight;
+                        //    int topIndex = count - shownItemsCount;
+                        //    if (topIndex < 0) {
+                        //        topIndex = 0;
+                        //    }
+                        //    if (listBoxLog.TopIndex != topIndex) {
+                        //        listBoxLog.TopIndex = topIndex;
+                        //    }
+                        //}
                     }
                 });
             }
