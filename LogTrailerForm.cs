@@ -91,6 +91,16 @@ namespace LogTrailer {
         }
         LogTrailReader logTrailer = new LogTrailReader();
 
+        private void toolStripButtonOpen_Click(object sender, EventArgs e) {
+            using (OpenFileDialog dlg = new OpenFileDialog()) {
+                dlg.CheckPathExists = true;
+                dlg.CheckFileExists = true;
+                dlg.Multiselect = false;
+                if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK) {
+                    OpenFile(dlg.FileName);
+                }
+            }
+        }
         private void LogTrailerForm_DragEnter(object sender, DragEventArgs e) {
             string[] filenames = (string[])e.Data.GetData(DataFormats.FileDrop);
             if (filenames.Length == 1 && GetFileSize(filenames[0]) >= 0) {
@@ -101,12 +111,15 @@ namespace LogTrailer {
             string[] filenames = (string[])e.Data.GetData(DataFormats.FileDrop);
             if (filenames.Length == 1 && GetFileSize(filenames[0]) >= 0) {
                 e.Effect = DragDropEffects.All;
-                if (logTrailer.Filename != filenames[0]) {
-                    timer.Enabled = false;
-                    logTrailer.Filename = filenames[0];
-                    Text = "LogTrailer - " + filenames[0];
-                    timer.Enabled = true;
-                }
+                OpenFile(filenames[0]);
+            }
+        }
+        private void OpenFile(string filename) {
+            if (logTrailer.Filename != filename) {
+                timer.Enabled = false;
+                logTrailer.Filename = filename;
+                Text = "LogTrailer - " + filename;
+                timer.Enabled = true;
             }
         }
         private long GetFileSize(string filename) {
@@ -216,6 +229,5 @@ namespace LogTrailer {
                 }
             }
         }
-
     }
 }
