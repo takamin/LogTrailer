@@ -28,22 +28,23 @@
             this.toolStripGeneral = new System.Windows.Forms.ToolStrip();
             this.cbAlwaysShowLast = new System.Windows.Forms.ToolStripButton();
             this.cmbEncoding = new System.Windows.Forms.ToolStripComboBox();
+            this.toolStripButtonOpen = new System.Windows.Forms.ToolStripButton();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.timer = new System.Windows.Forms.Timer(this.components);
             this.listBoxLog = new System.Windows.Forms.ListBox();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.toolStripButtonOpen = new System.Windows.Forms.ToolStripButton();
             this.toolStripGeneral.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolStripGeneral
             // 
             this.toolStripGeneral.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripButtonOpen,
             this.cbAlwaysShowLast,
-            this.cmbEncoding,
-            this.toolStripButtonOpen});
+            this.cmbEncoding});
             this.toolStripGeneral.Location = new System.Drawing.Point(0, 0);
             this.toolStripGeneral.Name = "toolStripGeneral";
+            this.toolStripGeneral.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
             this.toolStripGeneral.Size = new System.Drawing.Size(496, 26);
             this.toolStripGeneral.TabIndex = 2;
             this.toolStripGeneral.Text = "toolStrip1";
@@ -67,6 +68,16 @@
             this.cmbEncoding.Name = "cmbEncoding";
             this.cmbEncoding.Size = new System.Drawing.Size(161, 26);
             this.cmbEncoding.SelectedIndexChanged += new System.EventHandler(this.cbEncoding_SelectedIndexChanged);
+            // 
+            // toolStripButtonOpen
+            // 
+            this.toolStripButtonOpen.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripButtonOpen.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonOpen.Image")));
+            this.toolStripButtonOpen.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonOpen.Name = "toolStripButtonOpen";
+            this.toolStripButtonOpen.Size = new System.Drawing.Size(55, 23);
+            this.toolStripButtonOpen.Text = "開く(&O)";
+            this.toolStripButtonOpen.Click += new System.EventHandler(this.toolStripButtonOpen_Click);
             // 
             // statusStrip
             // 
@@ -92,16 +103,6 @@
             this.listBoxLog.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.listBoxLog.Size = new System.Drawing.Size(496, 298);
             this.listBoxLog.TabIndex = 4;
-            // 
-            // toolStripButtonOpen
-            // 
-            this.toolStripButtonOpen.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolStripButtonOpen.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonOpen.Image")));
-            this.toolStripButtonOpen.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonOpen.Name = "toolStripButtonOpen";
-            this.toolStripButtonOpen.Size = new System.Drawing.Size(55, 23);
-            this.toolStripButtonOpen.Text = "開く(&O)";
-            this.toolStripButtonOpen.Click += new System.EventHandler(this.toolStripButtonOpen_Click);
             // 
             // LogTrailerForm
             // 
